@@ -5,9 +5,17 @@ import {ProductListItem} from '@components';
 
 interface Props {
   data: Product[];
+  onPress: (product: Product) => void;
+  refetch?: () => void;
+  isFetching?: boolean;
 }
 
-const ProductList = ({data}: Props): ReactElement => {
+const ProductList = ({
+  data,
+  onPress,
+  refetch,
+  isFetching = false,
+}: Props): ReactElement => {
   return (
     <FlatList
       paddingX={2}
@@ -15,7 +23,11 @@ const ProductList = ({data}: Props): ReactElement => {
       data={data}
       numColumns={2}
       keyExtractor={item => item.id.toString()}
-      renderItem={({item}) => <ProductListItem product={item} />}
+      renderItem={({item}) => (
+        <ProductListItem product={item} onPress={() => onPress(item)} />
+      )}
+      onRefresh={refetch}
+      refreshing={isFetching}
     />
   );
 };
