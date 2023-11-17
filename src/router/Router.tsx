@@ -13,7 +13,10 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const Router = (): ReactElement => {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
         <Stack.Screen name={'Home'} component={Home} />
         <Stack.Screen name={'ProductDetail'} component={ProductDetail} />
       </Stack.Navigator>

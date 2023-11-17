@@ -14,9 +14,9 @@ export const productsApi = createApi({
     baseUrl: 'https://dummyjson.com',
   }),
   endpoints: builder => ({
-    getProducts: builder.query<ProductsResponse, void>({
-      query: () => ({
-        url: '/products',
+    getProducts: builder.query<ProductsResponse, string>({
+      query: (query: string) => ({
+        url: `/products/search?q=${query}`,
       }),
     }),
     getProductDetail: builder.query<Product, number>({
