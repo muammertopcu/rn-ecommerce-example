@@ -1,12 +1,8 @@
 import React, {ReactElement} from 'react';
-import {Box, NativeBaseProvider} from 'native-base';
+import {Box} from 'native-base';
 
 const Home = (): ReactElement => {
-  return (
-    <NativeBaseProvider>
-      <Box>Home</Box>
-    </NativeBaseProvider>
-  );
+  return <Box>Home</Box>;
 };
 
 export default Home;

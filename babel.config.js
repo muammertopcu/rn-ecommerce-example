@@ -9,6 +9,7 @@ module.exports = {
           '@screens': './src/screens',
           '@components': './src/components',
           '@types': './src/types',
+          '@redux/*': './src/redux/*',
         },
       },
     ],
