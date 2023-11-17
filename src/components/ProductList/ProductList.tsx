@@ -1,21 +1,26 @@
 import React, {ReactElement} from 'react';
-import {FlatList} from 'native-base';
+import {Box, FlatList, Spinner} from 'native-base';
 import type {Product} from '@types';
 import {ProductListItem} from '@components';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface Props {
   data: Product[];
   onPress: (product: Product) => void;
-  refetch?: () => void;
-  isFetching?: boolean;
+  nextHandler: () => void;
+  refetch: () => void;
+  isFetching: boolean;
 }
 
 const ProductList = ({
   data,
   onPress,
+  nextHandler,
   refetch,
   isFetching = false,
 }: Props): ReactElement => {
+  const {bottom} = useSafeAreaInsets();
+
   return (
     <FlatList
       paddingX={2}
@@ -27,7 +32,15 @@ const ProductList = ({
         <ProductListItem product={item} onPress={() => onPress(item)} />
       )}
       onRefresh={refetch}
-      refreshing={isFetching}
+      refreshing={false}
+      onEndReached={() => !!data && nextHandler()}
+      onEndReachedThreshold={0.5}
+      ListFooterComponent={
+        <Box justifyContent="center" alignItems="center">
+          {isFetching && <Spinner color="muted.500" />}
+        </Box>
+      }
+      contentContainerStyle={{paddingBottom: bottom + 10}}
     />
   );
 };

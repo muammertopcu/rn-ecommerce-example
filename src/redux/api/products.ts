@@ -8,15 +8,21 @@ interface ProductsResponse {
   limit: number;
 }
 
+interface ProductsParams {
+  searchParameter: string;
+  limit: number;
+  skip: number;
+}
+
 export const productsApi = createApi({
   reducerPath: 'productsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://dummyjson.com',
   }),
   endpoints: builder => ({
-    getProducts: builder.query<ProductsResponse, string>({
-      query: (query: string) => ({
-        url: `/products/search?q=${query}`,
+    getProducts: builder.query<ProductsResponse, ProductsParams>({
+      query: ({limit, skip, searchParameter}) => ({
+        url: `/products/search?limit=${limit}&skip=${skip}&q=${searchParameter}`,
       }),
     }),
     getProductDetail: builder.query<Product, number>({

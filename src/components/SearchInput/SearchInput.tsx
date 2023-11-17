@@ -15,6 +15,8 @@ const SearchInput = ({value, onChangeText, placeholder}: Props) => {
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
+      focusOutlineColor={'muted.500'}
+      backgroundColor={'muted.100'}
       InputLeftElement={
         <Box pl={2}>
           <Icon name={'magnifying-glass'} size={20} />
