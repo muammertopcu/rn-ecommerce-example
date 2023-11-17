@@ -1,8 +1,8 @@
 import React, {ReactElement} from 'react';
-import {NativeBaseProvider} from 'native-base';
+import Router from './router/Router';
 
 function App(): ReactElement {
-  return <NativeBaseProvider />;
+  return <Router />;
 }
 
 export default App;
