@@ -1,9 +1,12 @@
 import React from 'react';
-import {Box, Image, ScrollView, Spinner, Text, Toast} from 'native-base';
+import {Box, Image, ScrollView, Text, Toast} from 'native-base';
 import {RouteProp} from '@react-navigation/native';
 import {useGetProductDetailQuery} from '@redux/api/products';
 import {Product} from '@types';
-import {ProductDetailFooter, RatingStars} from '@components';
+import {Loading, ProductDetailFooter, RatingStars} from '@components';
+import Swiper from 'react-native-swiper';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {Dimensions} from 'react-native';
 
 type RootStackParamList = {
   ProductDetail: {productId: number};
@@ -16,13 +19,10 @@ interface Props {
 const ProductDetail = ({route}: Props) => {
   const {productId} = route.params;
   const {data, isLoading} = useGetProductDetailQuery(productId);
+  const {top} = useSafeAreaInsets();
 
   if (isLoading) {
-    return (
-      <Box flex={1} alignItems={'center'} justifyContent={'center'}>
-        <Spinner size={'large'} color={'muted.500'} />
-      </Box>
-    );
+    return <Loading />;
   }
 
   const product = data as Product;
@@ -30,20 +30,30 @@ const ProductDetail = ({route}: Props) => {
   return (
     <Box flex={1}>
       <ScrollView backgroundColor={'muted.50'}>
-        <Image
-          source={{uri: product.thumbnail}}
-          alt={product.title}
-          w={'100%'}
-          h={300}
-        />
+        <Swiper
+          showsButtons={true}
+          style={{
+            paddingTop: top,
+            height: Dimensions.get('window').height / 2,
+          }}>
+          {product.images.map(image => (
+            <Image
+              key={image}
+              source={{uri: image}}
+              alt={product.title}
+              w={'100%'}
+              h={Dimensions.get('window').height / 2}
+            />
+          ))}
+        </Swiper>
 
         <Box p={2}>
+          <RatingStars rating={product.rating} />
+
           <Text fontSize={'xl'} fontWeight={'bold'}>
             {product.title}
           </Text>
           <Text fontSize={'sm'}>{product.description}</Text>
-
-          <RatingStars rating={product.rating} />
         </Box>
       </ScrollView>
 

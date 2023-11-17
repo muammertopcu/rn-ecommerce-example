@@ -20,7 +20,7 @@ const ProductDetailFooter = ({
     <HStack
       position={'absolute'}
       bottom={0}
-      pb={bottom}
+      pb={bottom + 2}
       pt={5}
       px={2}
       backgroundColor={'muted.50'}
