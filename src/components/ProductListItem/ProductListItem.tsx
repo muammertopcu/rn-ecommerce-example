@@ -2,6 +2,7 @@ import React from 'react';
 import {Box, Image, Pressable, Text} from 'native-base';
 import type {Product} from '@types';
 import {calculateDiscountedPrice} from '@utils';
+import {RatingStars} from '../RatingStars';
 
 interface Props {
   product: Product;
@@ -47,6 +48,8 @@ const ProductListItem = ({product, onPress}: Props) => {
         </Text>
       </Box>
       <Box>{product.title}</Box>
+
+      <RatingStars rating={product.rating} />
     </Pressable>
   );
 };
