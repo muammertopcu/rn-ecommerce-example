@@ -1,15 +1,21 @@
 import React, {ReactElement} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Home} from '@screens';
+import {Home, ProductDetail} from '@screens';
 
-const Stack = createNativeStackNavigator();
+type RootStackParamList = {
+  Home: undefined;
+  ProductDetail: {productId: number};
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const Router = (): ReactElement => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name={'Home'} component={Home} />
+        <Stack.Screen name={'ProductDetail'} component={ProductDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

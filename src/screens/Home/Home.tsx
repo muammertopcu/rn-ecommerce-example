@@ -2,12 +2,17 @@ import React, {ReactElement} from 'react';
 import type {Product} from '@types';
 import {ProductList, ProductListSkeleton} from '@components';
 import {useGetProductsQuery} from '@redux/api/products';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 
-const Home = (): ReactElement => {
+interface Props {
+  navigation: NativeStackNavigationProp<any>;
+}
+
+const Home = ({navigation}: Props): ReactElement => {
   const {data, isLoading, refetch, isFetching} = useGetProductsQuery();
 
   const handlePress = (product: Product) => {
-    console.log(product.id);
+    navigation.navigate('ProductDetail', {productId: product.id});
   };
 
   if (isLoading) {

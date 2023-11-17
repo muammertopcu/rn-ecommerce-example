@@ -12,6 +12,7 @@ const RatingStars = ({rating}: RatingStarsProps) => {
   for (let i = 1; i <= 5; i++) {
     stars.push(
       <RBIcon
+        key={i}
         as={Icon}
         name={'star'}
         color={i <= rating ? 'yellow.400' : 'muted.200'}
