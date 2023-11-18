@@ -51,3 +51,7 @@ For iOS:
 ```bash
 npx react-native run-ios
 ```
+
+## Screenshots
+<img width="49%" src="./src/assets/screenshots/1.png">
+<img width="49%" src="./src/assets/screenshots/2.png">
