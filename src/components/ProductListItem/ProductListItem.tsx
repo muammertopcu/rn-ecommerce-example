@@ -32,7 +32,7 @@ const ProductListItem = ({product, onPress}: Props) => {
         borderRadius={5}
         marginBottom={2}
       />
-      <Box flexDirection={'row'} alignItems={'center'}>
+      <Box flexDirection={'row'} alignItems={'center'} flexWrap={'wrap'}>
         <Text fontSize={'sm'} bold>
           {product.price.toFixed(2)} TL
         </Text>

@@ -2,18 +2,14 @@ import React from 'react';
 import {Box, Image, ScrollView, Text, Toast} from 'native-base';
 import {RouteProp} from '@react-navigation/native';
 import {useGetProductDetailQuery} from '@redux/api/products';
-import {Product} from '@types';
+import type {Product, RootStack} from '@types';
 import {Loading, ProductDetailFooter, RatingStars} from '@components';
 import Swiper from 'react-native-swiper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Dimensions} from 'react-native';
 
-type RootStackParamList = {
-  ProductDetail: {productId: number};
-};
-
 interface Props {
-  route: RouteProp<RootStackParamList, 'ProductDetail'>;
+  route: RouteProp<RootStack, 'ProductDetail'>;
 }
 
 const ProductDetail = ({route}: Props) => {

@@ -1,27 +1,83 @@
 import React, {Fragment, ReactElement, useEffect, useState} from 'react';
-import type {Product} from '@types';
-import {ProductList, ProductListSkeleton, SearchInput} from '@components';
+import type {Product, RootStack} from '@types';
+import {
+  FilterButton,
+  ProductList,
+  ProductListSkeleton,
+  SearchInput,
+} from '@components';
 import {useGetProductsQuery} from '@redux/api/products';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {HStack} from 'native-base';
+import {HStack, Pressable, Text, VStack} from 'native-base';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useDebouncedCallback} from 'use-debounce';
+import {RouteProp} from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Entypo';
+import {formattedTextFromSlug} from '@utils';
 
 interface Props {
-  navigation: NativeStackNavigationProp<any>;
+  navigation: NativeStackNavigationProp<RootStack>;
+  route: RouteProp<RootStack, 'Home'>;
 }
 
-const Home = ({navigation}: Props): ReactElement => {
+interface Filter {
+  category: string | undefined;
+  searchParameter: string;
+  limit: number;
+  skip: number;
+}
+
+const Home = ({navigation, route}: Props): ReactElement => {
   const {top} = useSafeAreaInsets();
-  const limit: number = 10;
-  const [products, setProducts] = useState<Product[]>([]);
-  const [searchParameter, setSearchParameter] = useState<string>('');
-  const [skip, setSkip] = useState<number>(0);
-  const {data, isLoading, refetch, isFetching} = useGetProductsQuery({
-    searchParameter,
-    limit,
-    skip,
+  const [filter, setFilter] = useState<Filter>({
+    category: undefined,
+    searchParameter: '',
+    limit: 10,
+    skip: 0,
   });
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const {data, isLoading, refetch, isFetching} = useGetProductsQuery(filter);
+
+  useEffect(() => {
+    setProducts([]);
+
+    setFilter(prev => ({
+      ...prev,
+      category: route.params?.category ?? undefined,
+      skip: 0,
+      searchParameter: '',
+    }));
+  }, [route.params]);
+
+  const searchHandler = (query: string) => {
+    setFilter(prev => ({
+      ...prev,
+      searchParameter: query,
+      skip: 0,
+    }));
+    setProducts([]);
+  };
+
+  const resetFilter = () => {
+    setProducts([]);
+
+    setFilter(prev => ({
+      ...prev,
+      category: undefined,
+      skip: 0,
+      searchParameter: '',
+    }));
+  };
+
+  const nextPageHandler = () => {
+    if (!isFetching && !!data && filter.skip <= data.total) {
+      setFilter(prev => ({
+        ...prev,
+        skip: prev.skip + prev.limit,
+      }));
+    }
+  };
 
   useEffect(() => {
     if (data) {
@@ -32,25 +88,16 @@ const Home = ({navigation}: Props): ReactElement => {
     }
   }, [data]);
 
+  useEffect(() => {
+    refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
+
   const handlePress = (product: Product) => {
     navigation.navigate('ProductDetail', {productId: product.id});
   };
 
   const debounced = useDebouncedCallback(value => searchHandler(value), 250);
-
-  const searchHandler = (query: string) => {
-    setSkip(0);
-    setProducts([]);
-    setSearchParameter(query);
-    refetch();
-  };
-
-  const nextPageHandler = () => {
-    if (!isFetching && !!data && skip <= data.total) {
-      setSkip(skip + limit);
-      refetch();
-    }
-  };
 
   if (isLoading) {
     return <ProductListSkeleton />;
@@ -58,7 +105,7 @@ const Home = ({navigation}: Props): ReactElement => {
 
   return (
     <Fragment>
-      <HStack
+      <VStack
         pt={top + 2}
         pb={2}
         px={3}
@@ -68,7 +115,27 @@ const Home = ({navigation}: Props): ReactElement => {
           placeholder={'Search products...'}
           onChangeText={debounced}
         />
-      </HStack>
+
+        <HStack>
+          <FilterButton
+            onPress={() =>
+              navigation.navigate('CategoryFilter', {
+                category: filter.category,
+              })
+            }
+          />
+        </HStack>
+
+        {filter.category && (
+          <HStack>
+            <Pressable flexDirection={'row'} onPress={resetFilter}>
+              <Text>{formattedTextFromSlug(filter.category)}</Text>
+
+              <Icon name={'cross'} size={20} />
+            </Pressable>
+          </HStack>
+        )}
+      </VStack>
 
       <ProductList
         data={products}

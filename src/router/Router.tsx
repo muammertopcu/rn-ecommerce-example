@@ -1,14 +1,10 @@
 import React, {ReactElement} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Home, ProductDetail} from '@screens';
+import {CategoryFilter, Home, ProductDetail} from '@screens';
+import type {RootStack} from '@types';
 
-type RootStackParamList = {
-  Home: undefined;
-  ProductDetail: {productId: number};
-};
-
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator<RootStack>();
 
 const Router = (): ReactElement => {
   return (
@@ -19,6 +15,13 @@ const Router = (): ReactElement => {
         }}>
         <Stack.Screen name={'Home'} component={Home} />
         <Stack.Screen name={'ProductDetail'} component={ProductDetail} />
+        <Stack.Screen
+          name={'CategoryFilter'}
+          component={CategoryFilter}
+          options={{
+            presentation: 'modal',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

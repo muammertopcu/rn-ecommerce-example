@@ -10,6 +10,7 @@ interface ProductsResponse {
 
 interface ProductsParams {
   searchParameter: string;
+  category?: string;
   limit: number;
   skip: number;
 }
@@ -21,8 +22,15 @@ export const productsApi = createApi({
   }),
   endpoints: builder => ({
     getProducts: builder.query<ProductsResponse, ProductsParams>({
-      query: ({limit, skip, searchParameter}) => ({
-        url: `/products/search?limit=${limit}&skip=${skip}&q=${searchParameter}`,
+      query: ({limit, skip, searchParameter, category}) => ({
+        url: category
+          ? `/products/category/${category}?limit=${limit}&skip=${skip}`
+          : `/products/search?limit=${limit}&skip=${skip}&q=${searchParameter}`,
+      }),
+    }),
+    getCategories: builder.query<string[], void>({
+      query: () => ({
+        url: '/products/categories',
       }),
     }),
     getProductDetail: builder.query<Product, number>({
@@ -33,4 +41,8 @@ export const productsApi = createApi({
   }),
 });
 
-export const {useGetProductsQuery, useGetProductDetailQuery} = productsApi;
+export const {
+  useGetProductsQuery,
+  useGetCategoriesQuery,
+  useGetProductDetailQuery,
+} = productsApi;
